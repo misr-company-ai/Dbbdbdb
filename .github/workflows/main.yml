@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v4
 
     - name: Set up JDK
@@ -18,14 +18,17 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Grant permission
-      run: chmod +x gradlew
+    - name: Install Gradle
+      run: |
+        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
+        unzip gradle-8.2-bin.zip
+        export PATH=$PATH:$PWD/gradle-8.2/bin
 
     - name: Build APK
-      run: ./gradlew assembleDebug
+      run: gradle assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: app/build/outputs/apk/debug/
